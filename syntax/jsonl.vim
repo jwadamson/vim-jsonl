@@ -1,11 +1,11 @@
 " Vim syntax file
-" Language:	JSON
+" Language:	JSONL
 " Maintainer:	Eli Parra <eli@elzr.com> https://github.com/elzr/vim-json
 " Last Change:	2014-12-20 Load ftplugin/json.vim
 
 " Reload the definition of g:vim_json_syntax_conceal
 " see https://github.com/elzr/vim-json/issues/42
-runtime! ftplugin/json.vim
+runtime! ftplugin/jsonl.vim
 
 if !exists("main_syntax")
   if version < 600
@@ -13,7 +13,7 @@ if !exists("main_syntax")
   elseif exists("b:current_syntax")
     finish
   endif
-  let main_syntax = 'json'
+  let main_syntax = 'jsonl'
 endif
 
 syntax match   jsonNoise           /\%(:\|,\)/
@@ -68,15 +68,13 @@ if (!exists("g:vim_json_warnings") || g:vim_json_warnings==1)
 	syn match   jsonSemicolonError  ";"
 
 	" Syntax: No trailing comma after the last element of arrays or objects
-	syn match   jsonTrailingCommaError  ",\_s*[}\]]"
+	syn match   jsonTrailingCommaError  ",\s*[}\]]"
 
 	" Syntax: Watch out for missing commas between elements
-  syn match   jsonMissingCommaError /\("\|\]\|\d\)\zs\_s\+\ze"/
-  syn match   jsonMissingCommaError /\(\]\|\}\)\_s\+\ze"/ "arrays/objects as values
-  if (expand('%:e') !=? 'jsonl')
-    syn match   jsonMissingCommaError /}\_s\+\ze{/ "objects as elements in an array
-  endif
-  syn match   jsonMissingCommaError /\(true\|false\)\_s\+\ze"/ "true/false as value
+  syn match   jsonMissingCommaError /\("\|\]\|\d\)\zs\s\+\ze"/
+  syn match   jsonMissingCommaError /\(\]\|\}\)\s\+\ze"/ "arrays/objects as values
+  syn match   jsonMissingCommaError /}\s\+\ze{/ "objects as elements in an array
+  syn match   jsonMissingCommaError /\(true\|false\)\s\+\ze"/ "true/false as value
 endif
 
 " ********************************************** END OF ERROR WARNINGS
@@ -88,14 +86,10 @@ syn match  jsonPadding "\%^[[:blank:]\r\n]*[_$[:alpha:]][_$[:alnum:]]*[[:blank:]
 syn match  jsonPadding ");[[:blank:]\r\n]*\%$"
 
 " Syntax: Boolean
-syn match  jsonBoolean /\(true\|false\)\(\_s\+\ze"\)\@!/
+syn match  jsonBoolean /\(true\|false\)\(\s\+\ze"\)\@!/
 
 " Syntax: Null
 syn keyword  jsonNull      null
-
-" Syntax: Braces
-syn region  jsonFold matchgroup=jsonBraces start="{" end=/}\(\_s\+\ze\("\|{\)\)\@!/ transparent fold
-syn region  jsonFold matchgroup=jsonBraces start="\[" end=/]\(\_s\+\ze"\)\@!/ transparent fold
 
 " Define the default highlighting.
 if version >= 508 || !exists("did_json_syn_inits")
@@ -123,8 +117,8 @@ if version >= 508 || !exists("did_json_syn_inits")
   hi def link jsonNoise			Noise
 endif
 
-let b:current_syntax = "json"
-if main_syntax == 'json'
+let b:current_syntax = "jsonl"
+if main_syntax == 'jsonl'
   unlet main_syntax
 endif
 
